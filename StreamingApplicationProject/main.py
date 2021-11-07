@@ -1,6 +1,5 @@
-import stream
-
-streamScript = stream
+import Stream
+streamScript = Stream
 
 
 def inputOption(text, successList):
@@ -17,11 +16,13 @@ def inputs():
             choice = input("Which webcam would you like to use (0 for primary, 1 for secondary etc etc)? ")
             streamScript.webcamNumber = int(choice)
             streamScript.source = "Webcam"
+            print("Showing Webcam " + str(streamScript.webcamNumber))
         else:
             print("Showing screen")
     else:
         return
 
+
 if __name__ == '__main__':
     inputs()
-    streamScript.app.run(debug=True)
+    streamScript.app.run(debug=False)
