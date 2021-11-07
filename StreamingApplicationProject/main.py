@@ -1,31 +1,27 @@
-#Import necessary libraries
-from flask import Flask, render_template, Response
-import cv2
+import stream
 
-#Initialize the Flask app
-app = Flask(__name__)
+streamScript = stream
 
-camera = cv2.VideoCapture(0) #0 is local web cam
 
-def gen_frames():
-    while True:
-        success, frame = camera.read()  # read the camera frame
-        if not success:
-            break
+def inputOption(text, successList):
+    choice = input(text)
+    if choice in successList:
+        return True
+    else:
+        return False
+
+
+def inputs():
+    if inputOption("Are you joining or hosting a stream (j/h)? ", ['h', 'H']):
+        if inputOption("Would you like to stream your webcam or screen (w/s)? ", ['w', 'W']):
+            choice = input("Which webcam would you like to use (0 for primary, 1 for secondary etc etc)? ")
+            streamScript.webcamNumber = int(choice)
+            streamScript.source = "Webcam"
         else:
-            frame = cv2.flip(frame,1)
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+            print("Showing screen")
+    else:
+        return
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    inputs()
+    streamScript.app.run(debug=True)
