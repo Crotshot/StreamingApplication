@@ -12,15 +12,17 @@ def inputOption(text, successList):
 
 def inputs():
     if inputOption("Are you joining or hosting a stream (j/h)? ", ['h', 'H']):
+        streamScript.source = True
         if inputOption("Would you like to stream your webcam or screen (w/s)? ", ['w', 'W']):
             choice = input("Which webcam would you like to use (0 for primary, 1 for secondary etc etc)? ")
             streamScript.webcamNumber = int(choice)
-            streamScript.source = "Webcam"
+            streamScript.sourceInput = "Webcam"
             print("Showing Webcam " + str(streamScript.webcamNumber))
         else:
+            streamScript.sourceInput = "Screen"
             print("Showing screen")
     else:
-        return
+        streamScript.source = False
 
 
 if __name__ == '__main__':
