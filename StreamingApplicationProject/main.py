@@ -1,16 +1,22 @@
 import Stream
 streamScript = Stream
 
-
-def inputOption(text, successList):
-    choice = input(text)
-    if choice in successList:
-        return True
-    else:
-        return False
+if __name__ == '__main__':
+    streamScript.sourceInput = "Screen"
+    streamScript.app.run(host='0.0.0.0', port=5000, debug=False)
 
 
-def inputs():
+
+    #OLD
+
+    # def inputOption(text, successList):
+    #     choice = input(text)
+    #     if choice in successList:
+    #         return True
+    #     else:
+    #         return False
+
+    # def inputs():
     # if inputOption("Are you joining or hosting a stream (j/h)? ", ['h', 'H']):
     #     streamScript.source = True
     #     if inputOption("Would you like to stream your webcam or screen (w/s)? ", ['w', 'W']):
@@ -25,11 +31,6 @@ def inputs():
     #     streamScript.source = False
 
     #############################################
-    #Remove after testing
-    streamScript.source = True
-    streamScript.sourceInput = "Screen"
-    #############################################
+    # Remove after testing
 
-if __name__ == '__main__':
-    inputs()
-    streamScript.app.run(host='0.0.0.0', port=5000, debug=False)
+    #############################################
