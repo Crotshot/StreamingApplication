@@ -7,8 +7,8 @@ import asyncio
 app = Flask(__name__)
 
 webcamNumber = 0
-sourceInput = False
-source = "Screen"
+sourceInput = "Screen"
+source = False
 loop = True
 # class EchoServerProtocol:
 #     def connection_made(self, transport):
@@ -113,11 +113,11 @@ def video_feed():
 
 @app.route('/changeSource')
 def changeSource():
-    global source, loop
-    if source == 'Screen':
-        source = 'Webcam'
+    global sourceInput, loop
+    if sourceInput == 'Screen':
+        sourceInput = 'Webcam'
     else:
-        source = 'Screen'
+        sourceInput = 'Screen'
     loop = False
     return ('nothing')
 
