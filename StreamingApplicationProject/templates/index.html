@@ -1,9 +1,29 @@
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type = text/javascript>
+        $(function(){
+            $('#changeSource').on('click', function(e){
+                e.preventDefault()
+                $.getJSON('/changeSource',
+                    function(data){
+                    });
+                    return false;
+            });
+        });
+    </script>
+</head>
+
 <body>
 <div class="container">
     <div class="row">
         <div class="col-lg-8  offset-lg-2">
             <h3 class="mt-5">Live Streaming App</h3>
-            <img src="{{ url_for('video_feed') }}" width="40%">
+            <img src="{{ url_for('video_feed') }}" width="1152" height="648" class="center">
+        </div>
+        <div>
+            <a href = # id = changeSource ><button type="submit" name="submit_button">Change Source</button>
+            </a>
+            <!---<input type="submit" name="submit_button" value="Do Something Else">--->
         </div>
     </div>
 </div>
