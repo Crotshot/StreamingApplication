@@ -7,33 +7,27 @@ app = Flask(__name__)
 
 webcamNumber = 0
 sourceInput = "Screen"
-loop = True
+
 
 def gen_frames():
-    global loop
-    if sourceInput == "Webcam":
-        camera = cv2.VideoCapture(webcamNumber)
-        while loop:
+    camera = cv2.VideoCapture(webcamNumber)
+    while True:
+        if sourceInput == "Webcam":
             success, frame = camera.read()
-            if not success:
-                break
-            else:
+            if success:
                 frame = cv2.flip(frame, 1)
-                ret, buffer = cv2.imencode('.jpg', frame)
-                frame = buffer.tobytes()
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
-    else:
-        while loop:
+            else:
+                break
+        else:
             screenGrab = np.array(ImageGrab.grab(bbox=(0, 0, 1920, 1080)))  # x, y, w, h
+            #screenGrab = np.array(ImageGrab.grab(bbox=(-1920, 0, 1920, 1080)))  # x, y, w, h
             frame = cv2.cvtColor(screenGrab, cv2.COLOR_BGR2RGB)  # Convert PIL screen grab to cv2 colours
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
-    if not loop:
-        loop = True
-        gen_frames()
+
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+
 
 @app.route('/video_feed')
 def video_feed():
@@ -41,72 +35,30 @@ def video_feed():
 
 @app.route('/changeSource')
 def changeSource():
-    global sourceInput, loop
+    global sourceInput
     if sourceInput == 'Screen':
         sourceInput = 'Webcam'
+        print("Source: Webcam")
     else:
         sourceInput = 'Screen'
-    loop = False
+        print("Source: Screen")
+    return ('nothing')
+
+@app.route('/incCam')
+def incCam():
+    global webcamNumber
+    webcamNumber = webcamNumber + 1
+    print("Web cam number: " + str(webcamNumber))
+    return ('nothing')
+
+@app.route('/lowCam')
+def lowCam():
+    global webcamNumber
+    if webcamNumber > 0:
+        webcamNumber = webcamNumber -1
+    print("Web cam number: " + str(webcamNumber))
     return ('nothing')
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-
-# class EchoServerProtocol:
-#     def connection_made(self, transport):
-#         self.transport = transport
-#
-#     def datagram_received(self, data, addr):
-#         message = data.decode()
-#         print('Received %r from %s' % (message, addr))
-#         print('Send %r to %s' % (message, addr))
-#         self.transport.sendto(data, addr)
-
-# async def server():
-#     print("Starting UDP server")
-#     # Get a reference to the event loop as we plan to use low-level APIs.
-#     loop = asyncio.get_running_loop()
-#
-#     # One protocol instance will be created to serve all client requests.
-#     transport, protocol = await loop.create_datagram_endpoint(
-#         lambda: EchoServerProtocol(),
-#         local_addr=('127.0.0.1', 9999))
-#
-#     try:
-#         await asyncio.sleep(3600)  # Serve for 1 hour.
-#     finally:
-#         transport.close()
-
-# class EchoClientProtocol(asyncio.Protocol):
-#     def __init__(self, message, on_con_lost):
-#         self.message = message
-#         self.on_con_lost = on_con_lost
-#
-#     def connection_made(self, transport):
-#         transport.write(self.message.encode())
-#         print('Data sent: {!r}'.format(self.message))
-#
-#     def data_received(self, data):
-#         print('Data received: {!r}'.format(data.decode()))
-#
-#     def connection_lost(self, exc):
-#         print('The server closed the connection')
-#         self.on_con_lost.set_result(True)
-#
-# async def client():
-#     # Get a reference to the event loop as we plan to use low-level APIs.
-#     loop = asyncio.get_running_loop()
-#     on_con_lost = loop.create_future()
-#     message = 'Hello World!'
-#
-#     transport, protocol = await loop.create_connection(
-#         lambda: EchoClientProtocol(message, on_con_lost),
-#         '127.0.0.1', 8888)
-#     # Wait until the protocol signals that the connection is lost and close the transport.
-#     try:
-#         await on_con_lost
-#     finally:
-#         transport.close()

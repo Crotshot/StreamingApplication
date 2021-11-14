@@ -10,6 +10,24 @@
                     return false;
             });
         });
+        $(function(){
+            $('#lowCam').on('click', function(e){
+                e.preventDefault()
+                $.getJSON('/lowCam',
+                    function(data){
+                    });
+                    return false;
+            });
+        });
+        $(function(){
+            $('#incCam').on('click', function(e){
+                e.preventDefault()
+                $.getJSON('/incCam',
+                    function(data){
+                    });
+                    return false;
+            });
+        });
     </script>
 </head>
 
@@ -21,9 +39,11 @@
             <img src="{{ url_for('video_feed') }}" width="960" height="540" class="center">
         </div>
         <div>
-            <a href = # id = changeSource ><button type="submit" name="submit_button">Change Source</button>
-            </a>
-            <!---<input type="submit" name="submit_button" value="Do Something Else">--->
+            <a href = # id = changeSource ><button type="submit" name="submit_button">Change Source Type</button></a>
+        </div>
+        <div>
+            <a href = # id = lowCam ><button type="submit" name="submit_button">Previous Camera</button></a>
+            <a href = # id = incCam ><button type="submit" name="submit_button">Next Camera</button></a>
         </div>
     </div>
 </div>
