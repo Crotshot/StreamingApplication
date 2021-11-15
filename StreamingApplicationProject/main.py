@@ -3,7 +3,7 @@ streamScript = Stream
 
 if __name__ == '__main__':
     streamScript.sourceInput = "Screen"
-    streamScript.app.run(host='0.0.0.0', port=5000, debug=False)
+    streamScript.app.run(host='0.0.0.0', port=5000, debug=False)#, threaded=True, processes=1)
 
 
 

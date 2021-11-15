@@ -28,6 +28,42 @@
                     return false;
             });
         });
+        $(function(){
+            $('#togglePlay').on('click', function(e){
+                e.preventDefault()
+                $.getJSON('/togglePlay',
+                    function(data){
+                    });
+                    return false;
+            });
+        });
+        $(function(){
+            $('#stopStream').on('click', function(e){
+                e.preventDefault()
+                $.getJSON('/stopStream',
+                    function(data){
+                    });
+                    return false;
+            });
+        });
+        $(function(){
+            $('#toggleMotion').on('click', function(e){
+                e.preventDefault()
+                $.getJSON('/toggleMotion',
+                    function(data){
+                    });
+                    return false;
+            });
+        });
+        $(function(){
+            $('#remakeBackground').on('click', function(e){
+                e.preventDefault()
+                $.getJSON('/remakeBackground',
+                    function(data){
+                    });
+                    return false;
+            });
+        });
     </script>
 </head>
 
@@ -36,7 +72,7 @@
     <div class="row">
         <div class="col-lg-8  offset-lg-2">
             <h3 class="mt-5">Live Streaming App</h3>
-            <img src="{{ url_for('video_feed') }}" width="960" height="540" class="center">
+            <img src="{{ url_for('video_feed') }}" width="50%" height="50%" class="center">
         </div>
         <div>
             <a href = # id = changeSource ><button type="submit" name="submit_button">Change Source Type</button></a>
@@ -44,6 +80,14 @@
         <div>
             <a href = # id = lowCam ><button type="submit" name="submit_button">Previous Camera</button></a>
             <a href = # id = incCam ><button type="submit" name="submit_button">Next Camera</button></a>
+        </div>
+        <div>
+            <a href = # id = togglePlay ><button type="submit" name="submit_button">Toggle Play</button></a>
+            <a href = # id = stopStream ><button type="submit" name="submit_button">Stop Stream</button></a>
+        </div>
+        <div>
+            <a href = # id = toggleMotion ><button type="submit" name="submit_button">Toggle Motion Detection</button></a>
+            <a href = # id = remakeBackground ><button type="submit" name="submit_button">Remake Background</button></a>
         </div>
     </div>
 </div>
