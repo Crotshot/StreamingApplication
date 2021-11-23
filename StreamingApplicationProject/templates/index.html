@@ -38,9 +38,9 @@
             });
         });
         $(function(){
-            $('#stopStream').on('click', function(e){
+            $('#toggleCensoring').on('click', function(e){
                 e.preventDefault()
-                $.getJSON('/stopStream',
+                $.getJSON('/toggleCensoring',
                     function(data){
                     });
                     return false;
@@ -83,7 +83,7 @@
         </div>
         <div>
             <a href = # id = togglePlay ><button type="submit" name="submit_button">Toggle Play</button></a>
-            <a href = # id = stopStream ><button type="submit" name="submit_button">Stop Stream</button></a>
+            <a href = # id = toggleCensoring><button type="submit" name="submit_button">Toggle Censoring</button></a>
         </div>
         <div>
             <a href = # id = toggleMotion ><button type="submit" name="submit_button">Toggle Motion Detection</button></a>
