@@ -45,8 +45,10 @@ def gen_frames():
         if refresh == 30: #Refresh Censor everytime refresh is 30 (Every 60 frames)
             refC = True
         #preByte is frame before it is turned to bytes and frame is after it is turned to bytes
-        preByte, frame = frameCalc(sourceInput, cam, refresh, censoring, censorParts, refC, background, motionTracking, det)
+        preByte, frame, temp = frameCalc(sourceInput, cam, refresh, censoring, censorParts, refC, background, motionTracking, det)
 
+        if type(temp) != bool:
+            censorParts = temp
         if type(preByte) == bool: #If camera was not successfully read it frameCalc returns a boolean
             continue
         else:
@@ -76,7 +78,7 @@ def frameCalc(source, camera, ref, censor, cParts, refCen, backg, motC, detector
         if success: # If Webcam try to read active camera and flip result , if fails returns false
             frame = cv2.flip(frame, 1)
         else:
-            return False, False
+            return False, False, False
     elif source == "Screen": # Grab screen and change colour to rgb from bgr (A little slow as it is done currently on the CPU)
         screenGrab = np.array(ImageGrab.grab(bbox=(0, 0, 1920, 1080)))  # x, y, width, height
         frame = cv2.cvtColor(screenGrab, cv2.COLOR_BGR2RGB)  # Convert PIL screen grab to cv2 colours
@@ -97,16 +99,29 @@ def frameCalc(source, camera, ref, censor, cParts, refCen, backg, motC, detector
 
     if censor:
         print(ref) # Censoring is currently done on CPU and is very slow, printing refresh here for debugging purposes
-        cv2.imwrite("in/frame.jpg", frame) # Write current frame to folder
+        if refCen:
+            cv2.imwrite("in/frame.jpg", frame)  # Write current frame to folder
+            cParts = detector.detect("in/frame.jpg", mode="fast") # Read in folder and detect what needs to be censored (This is the really heavy part)
+            popArray = []
+            if len(cParts) > 0:
+                for i in range(len(cParts)):
+                    if refCen and not (cParts[i]["label"] == "FACE_F" or not cParts[i]["label"] == "FACE_M"):
+                        popArray.append(i)
+            if len(popArray) > 0:
+                popArray.sort(reverse=True)
+                for i in range(len(popArray)):
+                    cParts.pop(popArray[i])
 
-        # if refCen:
-        cParts = detector.detect("in/frame.jpg", "fast") # Read in folder and detect what needs to be censored (This is the really heavy part)
-        detector.censor("in/frame.jpg", "out/frame.jpg", cParts) # Apply censor over frame and output to folder (Also quite heavy)
-        frame = cv2.imread("out/frame.jpg") # Read back in the frame
+        if len(cParts) > 0:
+            for i in range(len(cParts)):
+                box = cParts[i]["box"]
+                print(str(box[0]) + ", " + str(box[1]) + ", " + str(box[2]) + ", " + str(box[3]) + ", ")
+                cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 0, 0), -1)
+                # cv2.rectangle(frame, (box[0], box[1]), (box[0] + box[2], box[1] + box[3]), (0, 0, 0), -1)
 
     ret, buffer = cv2.imencode('.jpg', frame) # Encode frame into memory buffer
     bufferedFrame = buffer.tobytes() # Convert buffered frame to byte string
-    return frame, bufferedFrame
+    return frame, bufferedFrame, cParts
 # </editor-fold>
 
 # <editor-fold desc="app routes">
