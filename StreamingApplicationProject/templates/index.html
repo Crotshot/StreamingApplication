@@ -56,9 +56,9 @@
             });
         });
         $(function(){
-            $('#remakeBackground').on('click', function(e){
+            $('#autoRemakeBackground').on('click', function(e){
                 e.preventDefault()
-                $.getJSON('/remakeBackground',
+                $.getJSON('/autoRemakeBackground',
                     function(data){
                     });
                     return false;
@@ -66,12 +66,12 @@
         });
     </script>
 </head>
-
+<title>MyZone</title>
 <body>
 <div class="container">
     <div class="row">
         <div class="col-lg-8  offset-lg-2">
-            <h3 class="mt-5">Live Streaming App</h3>
+            <h3 class="mt-5">MyZone</h3>
             <img src="{{ url_for('video_feed') }}" width="50%" height="50%" class="center">
         </div>
         <div>
@@ -87,7 +87,7 @@
         </div>
         <div>
             <a href = # id = toggleMotion ><button type="submit" name="submit_button">Toggle Motion Detection</button></a>
-            <a href = # id = remakeBackground ><button type="submit" name="submit_button">Remake Background</button></a>
+            <a href = # id = autoRemakeBackground ><button type="submit" name="submit_button">Auto Refresh Background</button></a>
         </div>
     </div>
 </div>
