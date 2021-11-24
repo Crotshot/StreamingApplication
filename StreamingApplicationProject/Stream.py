@@ -62,8 +62,7 @@ def gen_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # Add byte frame, then show it
 
-    os.remove("in/frame.jpg") # Remove left over in and out frames when stopping the stream
-    os.remove("out/frame.jpg")
+    os.remove("in/frame.jpg")
 
 # @jit#(target = "cuda")
 def refBackground(frame): # Motion censor background is a gray scaled image with a blur
@@ -102,22 +101,11 @@ def frameCalc(source, camera, ref, censor, cParts, refCen, backg, motC, detector
         if refCen:
             cv2.imwrite("in/frame.jpg", frame)  # Write current frame to folder
             cParts = detector.detect("in/frame.jpg", mode="fast") # Read in folder and detect what needs to be censored (This is the really heavy part)
-            popArray = []
-            if len(cParts) > 0:
-                for i in range(len(cParts)):
-                    if refCen and not (cParts[i]["label"] == "FACE_F" or not cParts[i]["label"] == "FACE_M"):
-                        popArray.append(i)
-            if len(popArray) > 0:
-                popArray.sort(reverse=True)
-                for i in range(len(popArray)):
-                    cParts.pop(popArray[i])
-
         if len(cParts) > 0:
             for i in range(len(cParts)):
                 box = cParts[i]["box"]
                 print(str(box[0]) + ", " + str(box[1]) + ", " + str(box[2]) + ", " + str(box[3]) + ", ")
                 cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 0, 0), -1)
-                # cv2.rectangle(frame, (box[0], box[1]), (box[0] + box[2], box[1] + box[3]), (0, 0, 0), -1)
 
     ret, buffer = cv2.imencode('.jpg', frame) # Encode frame into memory buffer
     bufferedFrame = buffer.tobytes() # Convert buffered frame to byte string
