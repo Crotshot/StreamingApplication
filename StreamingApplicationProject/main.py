@@ -1,9 +1,15 @@
+from waitress import serve
 import Stream
-streamScript = Stream
+import socket
+import webbrowser
+ipAddress = socket.gethostbyname(socket.gethostname())
 
 if __name__ == '__main__':
-    streamScript.sourceInput = "Screen"
-    streamScript.app.run(host='0.0.0.0', port=5000, debug=False)#, threaded=True, processes=1)
+    webbrowser.open_new("http://" + ipAddress + ":8080/")
+    serve(Stream.app, host='0.0.0.0', port=8080)
+
+    # streamScript.sourceInput = "Screen"
+    # streamScript.app.run(host='0.0.0.0', port=5000, debug=False)#, threaded=True, processes=1)
 
     #OLD
 
